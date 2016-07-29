@@ -22,8 +22,9 @@ public class GameOfLifeTest {
     HashMap<Set<Integer>,Boolean> inputMap = new HashMap<>();
     HashMap<Set<Integer>,Boolean> outputMap = new HashMap<>();
     inputMap=getStillStateInput(inputMap);
+    System.out.println("this is the input map"+inputMap);
     outputMap=inputMap;
-    Assert.assertEquals(outputMap,new GameOfLife(inputMap).getNextGeneration());
+    Assert.assertEquals(outputMap,new GameOfLife(inputMap).getNextGeneration())
   }
   @Test
   public void nextGenerationOfTheGivenGenerationShouldBeOscillating(){
@@ -31,12 +32,13 @@ public class GameOfLifeTest {
     HashMap<Set<Integer>,Boolean> outputMap = new HashMap<>();
     inputMap=getOscillationStateInput(inputMap);
     outputMap=getOscillationStateOutput(outputMap);
+    System.out.println(outputMap);
     Assert.assertEquals(outputMap,new GameOfLife(inputMap).getNextGeneration());
   }
 
+
   private HashMap<Set<Integer>,Boolean> getOscillationStateOutput(HashMap<Set<Integer>, Boolean> outputMap) {
     Set<Integer> set = new HashSet<>();
-    outputMap.put(set,true);
     set= add(set,1,1);
     outputMap.put(set,true);
     set= add(set,0,1);
@@ -84,6 +86,4 @@ public class GameOfLifeTest {
     map.put(set,true);
   return map;
   }
-
-
 }
