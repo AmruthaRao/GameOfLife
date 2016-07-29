@@ -1,69 +1,49 @@
 package tw.gol.assignment;
 
+import java.util.*;
 
 public class GameOfLife {
-  public int maxX;
-  public int maxY;
-  boolean expectedOutput[][];
 
-  public boolean[][] nextGeneration(boolean[][] input) {
-    maxX = (input.length);
-    maxY = 0;
-    int i, j;
-    for (i = 0; i < maxX; i++) {
-      if (input[i].length > maxY) {
-        maxY = input[i].length;
-      }
-    }
-    maxY++;
-    maxX++;
+  HashMap<Set<Integer>,Boolean> map=new HashMap<>();
 
-    expectedOutput = new boolean[maxX][maxY];
-    expectedOutput = updateLives(input);
-    return expectedOutput;
+  GameOfLife(HashMap<Set<Integer>,Boolean> map){
+    this.map = map;
   }
 
-  public int numberOfLiveNeighbours(boolean input[][], int xCoordinate, int yCoordinate) {
-    int counter = 0;
-    for (int i = xCoordinate - 1; i <= xCoordinate + 1; i++) {
-      for (int j = yCoordinate - 1; j <= yCoordinate + 1; j++) {
-        if ((i >= 0) && (j >= 0) && (i < maxX - 1) && (j < maxY - 1)) {
-
-          if (input[i][j] == true) {
-            counter++;
-          }
-        }
+  public HashMap<Set<Integer>,Boolean> getNextGeneration() {
+    int counter;
+    for (Set key : new ArrayList<Set>(map.keySet())) {
+      counter=getLiveNeighbourCount(key);
+      if(counter>3||counter<2){
+        map.remove(key);
       }
     }
-    return counter;
+    return map;
   }
 
-  public boolean[][] updateLives(boolean input[][]) {
-    int n;
-    for (int i = 0; i < maxX; i++) {
-      for (int j = 0; j < maxY; j++) {
-        n = numberOfLiveNeighbours(input, i, j);
-        if (i == maxX - 1 || j == maxY - 1) {
-          if (n == 3) {
-            expectedOutput[i][j] = true;
-          }
-        } else {
-          if (input[i][j] == true) {
-            n--;
-            if (n > 3 || n < 2) {
-              expectedOutput[i][j] = false;
-            }
-            else
-              expectedOutput[i][j] = true;
+  private int getLiveNeighbourCount(Set key) {
+    Set<Integer> tempSet = new HashSet<>();
+    TreeSet sortedSet = new TreeSet<Integer>(key);
+    int counter=0,i=(Integer)sortedSet.first(),j=(Integer)sortedSet.last();
 
-          } else if (input[i][j] == false && n == 3) {
-            expectedOutput[i][j] = true;
-          }
-        }
-
-      }
-    }
-    return expectedOutput;
-
+    for(int p=(i-1);p<=(i+1);p++){
+     for(int q=(j-1);q<=(j+1);q++){
+       if(p!=i||q!=j){
+         tempSet=newSet(tempSet,p,q);
+         if(map.containsKey(tempSet)){
+           counter++;
+         }
+       }
+     }
+   }
+   return counter;
   }
+
+  private Set<Integer> newSet(Set<Integer> tempSet, int p, int q) {
+    tempSet.clear();
+    tempSet.add(p);
+    tempSet.add(q);
+    return tempSet;
+  }
+
 }
